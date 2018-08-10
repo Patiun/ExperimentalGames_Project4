@@ -25,9 +25,9 @@ GameObject:
   - component: {fileID: 54708524500639082}
   - component: {fileID: 135557409094895360}
   - component: {fileID: 114009761728167258}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SheepV2
-  m_TagString: Untagged
+  m_TagString: Sheep
   m_Icon: {fileID: 7866945982896999795, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -42,8 +42,7 @@ GameObject:
   - component: {fileID: 4422541954802440}
   - component: {fileID: 33915314191460474}
   - component: {fileID: 23023835268638954}
-  - component: {fileID: 65631313904057854}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -188,18 +187,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!65 &65631313904057854
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1448620656241904}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114009761728167258
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -211,17 +198,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ab4f9a9c4933394999792c8b330c92d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 0
   neighbors: []
   speed: 2
-  alignmentWeight: 1
+  alignmentWeight: 2
   cohesionWeight: 1
-  seperationWeight: 1
-  fearWeight: 5
-  seperationVariance: 1
-  tooCloseDistance: 2.5
-  rotationSpeed: 1
+  seperationWeight: 2
+  fearWeight: 6
+  seperationVariance: 0.25
+  tooCloseDistance: 1.75
+  rotationSpeed: 1.25
   scared: 0
-  scaryThing: {fileID: 0}
+  scaryThings: []
+  sightLayers:
+    serializedVersion: 2
+    m_Bits: 513
+  fov: 150
+  sightDistance: 0
+  wanderRate: 3
+  wanderStrength: 90
+  grazeBase: 5
+  grazeVariance: 2
 --- !u!135 &135557409094895360
 SphereCollider:
   m_ObjectHideFlags: 1
