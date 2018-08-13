@@ -103,12 +103,12 @@ public class Herd : MonoBehaviour {
             newHerd.GetComponent<Herd>().sheep.AddRange(otherHerd.sheep);
             newHerd.leaderDirectionWeight = leaderDirectionWeight;
             newHerd.leaderResetRate = leaderResetRate;
-
+            /*
             foreach(GameObject shep in newHerd.sheep)
             {
                 shep.GetComponent<SheepAI>().herd = newHerd;
             }
-
+            */
             Destroy(otherHerd.gameObject);
             Destroy(this.gameObject);
         }
@@ -124,7 +124,7 @@ public class Herd : MonoBehaviour {
         newHerd.GetComponent<Herd>().sheep.Add(shep);
         newHerd.leaderDirectionWeight = leaderDirectionWeight;
         newHerd.leaderResetRate = leaderResetRate;
-        shep.GetComponent<SheepAI>().herd = newHerd;
+        //shep.GetComponent<SheepAI>().herd = newHerd;
 
         RecalculateHerd();
     }

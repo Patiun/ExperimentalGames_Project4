@@ -21,12 +21,14 @@ public class SheepAINoHerd : MonoBehaviour {
     public float wanderRate;
     public float wanderStrength;
     public float grazeBase, grazeVariance;
+    public float fleeBase, fleeVariance;
 
     private Rigidbody rb;
     private float originalCohesion, originalSeperation, originalSpeed;
     private float nextWanderTime;
     private Vector3 internalVelocity;
     private float nextGrazeTime;
+    private float fleeEndTime;
 
 	// Use this for initialization
 	void Start () {
@@ -54,6 +56,28 @@ public class SheepAINoHerd : MonoBehaviour {
             if (neighbors.Count == 0)
             {
                 state = State.WANDER;
+            }
+        }
+        else if (state == State.FLEE)
+        {
+            internalVelocity = Vector3.Lerp(internalVelocity, (ComputeAlignment() * alignmentWeight + ComputeCohesion() * cohesionWeight + ComputeSeperation() * seperationWeight + ComputeFear() * fearWeight).normalized * speed, 0.45f);
+            internalVelocity.y = 0f;
+            rb.velocity = internalVelocity;
+            transform.rotation = Quaternion.LookRotation(internalVelocity);
+            if (!scared && Time.time >= fleeEndTime)
+            {
+                if (neighbors.Count >= 4)
+                {
+                    state = State.FLOCK;
+                }
+                else
+                {
+                    state = State.WANDER;
+                }
+
+                cohesionWeight = originalCohesion;
+                seperationVariance = originalSeperation;
+                speed = originalSpeed;
             }
         }
         else if (state == State.WANDER)
@@ -98,7 +122,7 @@ public class SheepAINoHerd : MonoBehaviour {
             if (!neighbors.Contains(other.gameObject))
             {
                 neighbors.Add(other.gameObject);
-                if (Random.Range(0f,100f) <= 15 * neighbors.Count)
+                if (state != State.FLEE && Random.Range(0f,100f) <= 15 * neighbors.Count)
                 {
                     state = State.FLOCK; //Wander -> Flock
                 }
@@ -110,9 +134,10 @@ public class SheepAINoHerd : MonoBehaviour {
             if (!scaryThings.Contains(other.gameObject))
             {
                 scared = true;
+                state = State.FLEE;
                 cohesionWeight *= 2f;
                 seperationVariance *= 0.8f;
-                speed *= 1.5f;
+                speed *= 2.5f;
                 scaryThings.Add(other.gameObject);
             }
         }
@@ -126,7 +151,7 @@ public class SheepAINoHerd : MonoBehaviour {
             if (neighbors.Contains(other.gameObject))
             {
                 neighbors.Remove(other.gameObject);
-                if (Random.Range(0f, 100f) >= 20 * neighbors.Count)
+                if (state != State.FLEE && Random.Range(0f, 100f) >= 20 * neighbors.Count)
                 {
                     state = State.WANDER; //Flock -> Wander
                     nextGrazeTime = Time.time + grazeBase + Random.Range(-grazeVariance, grazeVariance);
@@ -143,9 +168,7 @@ public class SheepAINoHerd : MonoBehaviour {
             if (scaryThings.Count <= 0)
             {
                 scared = false;
-                cohesionWeight = originalCohesion;
-                seperationVariance = originalSeperation;
-                speed = originalSpeed;
+                fleeEndTime = Time.time + fleeBase + Random.Range(-fleeVariance, fleeVariance);
             }
         }
     }
@@ -181,9 +204,12 @@ public class SheepAINoHerd : MonoBehaviour {
         {
             if (CanSee(shep))
             {
-                SheepAINoHerd ai = shep.GetComponent<SheepAINoHerd>();
-                dir += ai.GetVelocity();
-                count++;
+                if (shep != null)
+                {
+                    SheepAINoHerd ai = shep.GetComponent<SheepAINoHerd>();
+                    dir += ai.GetVelocity();
+                    count++;
+                }
             }
         }
         dir = dir / neighbors.Count;
@@ -202,8 +228,11 @@ public class SheepAINoHerd : MonoBehaviour {
         {
             if (CanSee(shep))
             {
-                dir += shep.transform.position;
-                count++;
+                if (shep != null)
+                {
+                    dir += shep.transform.position;
+                    count++;
+                }
             }
         }
         dir = dir / neighbors.Count;
@@ -222,12 +251,15 @@ public class SheepAINoHerd : MonoBehaviour {
         {
             if (CanSee(shep))
             {
-                Vector3 dif = shep.transform.position - transform.position;
-                if (dif.magnitude <= tooCloseDistance + Random.Range(-seperationVariance, seperationVariance))
+                if (shep != null)
                 {
-                    dir += -dif;
+                    Vector3 dif = shep.transform.position - transform.position;
+                    if (dif.magnitude <= tooCloseDistance + Random.Range(-seperationVariance, seperationVariance))
+                    {
+                        dir += -dif;
+                    }
+                    count++;
                 }
-                count++;
             }
         }
         dir = dir / neighbors.Count;
