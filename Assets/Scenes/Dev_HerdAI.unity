@@ -342,6 +342,7 @@ GameObject:
   - component: {fileID: 222559589}
   - component: {fileID: 222559588}
   - component: {fileID: 222559587}
+  - component: {fileID: 222559590}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -403,12 +404,29 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 222559586}
   m_LocalRotation: {x: 0.6756669, y: -0, z: -0, w: 0.73720706}
-  m_LocalPosition: {x: 0, y: 66.8, z: -6.8}
+  m_LocalPosition: {x: 0, y: 35.3, z: -26.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 85.012, y: 0, z: 0}
+--- !u!114 &222559590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 222559586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d2c9028efd34cc4a80e451b3d80bbb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  height: 50
+  center: {x: 0, y: 0, z: 0}
+  followable:
+  - {fileID: 1468361524}
+  - {fileID: 825283848}
+  smoothrate: 0.25
 --- !u!1 &286204002
 GameObject:
   m_ObjectHideFlags: 0
@@ -1006,6 +1024,8 @@ MonoBehaviour:
   spawnRate: 0.4
   wolves: []
   wolfPrefab: {fileID: 1668749956130736, guid: 352b5e0add63ae84f9952b9ed63b8758, type: 2}
+  wolfInSheepsClothingPrefab: {fileID: 0}
+  chanceForSheepsClothing: 20
 --- !u!114 &504836968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1651,7 +1671,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4871497862506430, guid: c80db79835164ab4cb43c35913c72f80, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -31.01
+      value: -31.3
       objectReference: {fileID: 0}
     - target: {fileID: 4871497862506430, guid: c80db79835164ab4cb43c35913c72f80, type: 2}
       propertyPath: m_LocalRotation.x

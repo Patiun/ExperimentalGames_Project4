@@ -39,7 +39,7 @@ public class WolfAI : MonoBehaviour {
         position += velocity;
         transform.position = position;
         acceleration = Vector3.zero;
-        if (Input.GetKeyDown("a"))
+        if (Input.GetKeyDown("a") && !GameController.instance.debug)
         {
             Scare();
         }
@@ -63,6 +63,10 @@ public class WolfAI : MonoBehaviour {
                 velocity = Vector3.zero;
                 huntTime = Time.time + waitTime;
                 target = SheepManager.instance.GetNearestSheep(position);
+                if (target == null)
+                {
+                    Scare();
+                }
             }
         } else if (hunting)
         {

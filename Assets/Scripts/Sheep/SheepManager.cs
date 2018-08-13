@@ -8,6 +8,8 @@ public class SheepManager : MonoBehaviour {
 
     public List<GameObject> sheep;
 
+    public List<GameObject> hunted;
+
 	// Use this for initialization
 	void Start () {
         instance = this;
@@ -24,17 +26,29 @@ public class SheepManager : MonoBehaviour {
         GameObject shep = null;
         foreach(GameObject s in sheep)
         {
-            if (Vector3.Distance(pos,s.transform.position) < shortest)
+            if (Vector3.Distance(pos,s.transform.position) < shortest && !hunted.Contains(s))
             {
                 shortest = Vector3.Distance(pos, s.transform.position);
                 shep = s;
             }
         }
+        if (sheep != null) { hunted.Add(shep); }
+       
         return shep;
     }
 
     public void RemoveSheep(GameObject shep)
     {
         sheep.Remove(shep);
+        hunted.Remove(shep);
+        if (sheep.Count == 0)
+        {
+            GameController.instance.GameOver();
+        }
+    }
+
+    public void AddHunted(GameObject shep)
+    {
+        hunted.Add(shep);
     }
 }

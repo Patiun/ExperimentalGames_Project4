@@ -5,9 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
 
+    public static GameController instance;
+    public bool debug;
 	// Use this for initialization
 	void Start () {
-		
+        instance = this;
 	}
 	
 	// Update is called once per frame
@@ -20,5 +22,14 @@ public class GameController : MonoBehaviour {
         {
             Application.Quit();
         }
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            debug = !debug;
+        }
 	}
+
+    public void GameOver()
+    {
+        Debug.Log("Game Over!");
+    }
 }
