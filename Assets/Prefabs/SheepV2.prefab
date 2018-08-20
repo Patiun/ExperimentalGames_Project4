@@ -219,10 +219,10 @@ MonoBehaviour:
   wanderStrength: 90
   grazeBase: 5
   grazeVariance: 2
-  fleeBase: 0
-  fleeVariance: 0
-  barkBoostDuration: 1.25
-  barkBoostStrength: 2
+  fleeBase: 2.5
+  fleeVariance: 0.75
+  barkBoostDuration: 2
+  barkBoostStrength: 1.5
 --- !u!135 &135557409094895360
 SphereCollider:
   m_ObjectHideFlags: 1

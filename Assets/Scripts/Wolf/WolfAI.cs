@@ -44,7 +44,7 @@ public class WolfAI : MonoBehaviour {
         {
             Scare();
         }
-        if (velocity.magnitude > 0)
+        if (velocity.magnitude > 0 && !hunting)
         {
             transform.rotation = Quaternion.LookRotation(velocity);
         }
@@ -77,12 +77,16 @@ public class WolfAI : MonoBehaviour {
                 target = SheepManager.instance.GetNearestSheep(position);
                 if (target == null) { Scare(); }
             }
-            if (Time.time > huntTime)
+            else
             {
-                Hunt(target);
-            } else
-            {
-                transform.LookAt(target.transform.position);
+                if (Time.time > huntTime)
+                {
+                    Hunt(target);
+                }
+                else
+                {
+                    transform.LookAt(target.transform.position);
+                }
             }
         } else if (fleeing)
         {

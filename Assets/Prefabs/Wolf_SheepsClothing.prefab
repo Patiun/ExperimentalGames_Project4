@@ -262,7 +262,7 @@ MonoBehaviour:
   acceleration: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
   huntPosition: {x: 21.8, y: 0.5, z: 31.4}
-  waitTime: 2
+  waitTime: 4
   sneaking: 0
   hunting: 0
   fleeing: 0

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GrassPatch : MonoBehaviour {
 
+    public bool active;
     public int scoreAmount;
     public float grassAmount, maxAmount;
     public float perSheepRate;
@@ -15,22 +16,33 @@ public class GrassPatch : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        grassAmount = maxAmount;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (sheep.Count > 0)
+        if (active)
         {
-            grassAmount -= sheep.Count * perSheepRate * Time.deltaTime;
-            if (grassAmount <= 0)
+            if (sheep.Count > 0)
             {
-                GameController.instance.AddScore(scoreAmount);
-                Destroy(this.gameObject);
+                grassAmount -= sheep.Count * perSheepRate * Time.deltaTime;
+                if (grassAmount <= 0)
+                {
+                    GameController.instance.AddScore(scoreAmount);
+                    active = false;
+                    gameObject.SetActive(active);
+                }
+                UpdateGrass();
             }
-            UpdateGrass();
         }
 	}
+
+    public void Activate()
+    {
+        grassAmount = maxAmount;
+        active = true;
+        gameObject.SetActive(active);
+        UpdateGrass();
+    }
 
     private void UpdateGrass()
     {
