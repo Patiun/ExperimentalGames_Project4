@@ -28,11 +28,14 @@ public class SheepAINoHerd : MonoBehaviour {
     private Rigidbody rb;
     private float originalCohesion, originalSeperation, originalSpeed;
     private float nextWanderTime;
-    private Vector3 internalVelocity;
+    public Vector3 internalVelocity;
     private float nextGrazeTime;
     private float fleeEndTime;
     private float barkOff;
     private bool bark;
+    private float terrifyTime;
+    public bool terrified;
+    private GameObject terrifySource;
 
 	// Use this for initialization
 	void Start () {
@@ -49,7 +52,6 @@ public class SheepAINoHerd : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        
         if (state == State.FLOCK)
         {
             //Flock
@@ -64,11 +66,12 @@ public class SheepAINoHerd : MonoBehaviour {
         }
         else if (state == State.FLEE)
         {
-            internalVelocity = Vector3.Lerp(internalVelocity, (ComputeAlignment() * alignmentWeight + ComputeCohesion() * cohesionWeight + ComputeSeperation() * seperationWeight + ComputeFear() * fearWeight).normalized * speed, 0.45f);
+            internalVelocity = (ComputeAlignment() * alignmentWeight + ComputeCohesion() * cohesionWeight + ComputeSeperation() * seperationWeight + ComputeFear() * fearWeight).normalized * speed;
+            Debug.Log(ComputeFear());
             internalVelocity.y = 0f;
             rb.velocity = internalVelocity;
             transform.rotation = Quaternion.LookRotation(internalVelocity);
-            if (!scared && Time.time >= fleeEndTime)
+            if (!scared && Time.time >= fleeEndTime && !terrified)
             {
                 if (neighbors.Count >= 4)
                 {
@@ -82,6 +85,20 @@ public class SheepAINoHerd : MonoBehaviour {
                 cohesionWeight = originalCohesion;
                 seperationVariance = originalSeperation;
                 speed = originalSpeed;
+            }
+            if (terrified && Time.time > terrifyTime)
+            {
+                terrified = false;
+                cohesionWeight = originalCohesion;
+                terrifySource = null;
+                if (neighbors.Count >= 4)
+                {
+                    state = State.FLOCK;
+                }
+                else
+                {
+                    state = State.WANDER;
+                }
             }
         }
         else if (state == State.WANDER)
@@ -304,23 +321,38 @@ public class SheepAINoHerd : MonoBehaviour {
     public Vector3 ComputeFear()
     {
         Vector3 dir = Vector3.zero;
+        int count = scaryThings.Count;
         if (scared)
         {
             foreach (GameObject thing in scaryThings)
             {
                 if (CanSee(thing))
                 {
-                    Vector3 dif = thing.GetComponent<Collider>().ClosestPoint(transform.position) - transform.position; //FIX THIS
+                    Vector3 dif = thing.transform.position - transform.position; //FIX THIS
                     dir += dif;
                 }
             }
         }
-        dir = dir / scaryThings.Count;
+        if (terrifySource != null)
+        {
+            dir = dir + terrifySource.transform.position - transform.position;
+            count++;
+        }
+        dir = dir / count;
         dir.y = 0f;
 
         //Debug.DrawLine(transform.position, dir + transform.position, Color.red);
 
         return -dir.normalized;
+    }
+
+    public void Terrify(GameObject source)
+    {
+        terrifySource = source;
+        terrified = true;
+        state = State.FLEE;
+        cohesionWeight = 0f;
+        terrifyTime = Time.time + 3 * fleeBase;
     }
 
     public Vector3 GetVelocity()

@@ -61,9 +61,9 @@ public class WolfSpawner : MonoBehaviour {
         else
         {
             wolf = Instantiate(wolfPrefab, startLocation, Quaternion.identity, transform);
+            targetLocation.y = wolf.transform.position.y;
+            wolf.GetComponent<WolfAI>().huntPosition = targetLocation;
         }
-        targetLocation.y = wolf.transform.position.y;
-        wolf.GetComponent<WolfAI>().huntPosition = targetLocation;
         wolves.Add(wolf);
         nextSpawn = Time.time + 1 / spawnRate;
     }

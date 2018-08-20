@@ -39,10 +39,10 @@ GameObject:
   - component: {fileID: 33165453672871674}
   - component: {fileID: 23718451349139538}
   - component: {fileID: 65877379388709756}
-  - component: {fileID: 114502295009121440}
+  - component: {fileID: 114358224161428786}
   m_Layer: 0
   m_Name: Wolf_SheepsClothing
-  m_TagString: Scary
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -243,7 +243,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 2.7344036, z: 4.303172}
   m_Center: {x: 0, y: 1.4874, z: 0}
---- !u!114 &114502295009121440
+--- !u!114 &114358224161428786
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -251,18 +251,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 1922693245446242}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 290d370cc481f4e488c74196aee14c2e, type: 3}
+  m_Script: {fileID: 11500000, guid: 3b1599403b799f44c939f6f920a5b698, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   sneakSpeed: 0.1
   sprintSpeed: 0.5
   maxForce: 0.06
   position: {x: 0, y: 0, z: 0}
-  velocity: {x: 0, y: 0, z: 0.2}
+  velocity: {x: 0, y: 0, z: 0}
   acceleration: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
-  huntPosition: {x: 21.8, y: 0.5, z: 31.4}
-  waitTime: 4
+  clothing: {fileID: 1840042881762758}
+  waitTime: 5
   sneaking: 0
   hunting: 0
   fleeing: 0

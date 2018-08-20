@@ -37,6 +37,22 @@ public class SheepManager : MonoBehaviour {
         return shep;
     }
 
+    public GameObject GetNearestSheep(Vector3 pos, bool t)
+    {
+        float shortest = 10000f;
+        GameObject shep = null;
+        foreach (GameObject s in sheep)
+        {
+            if (Vector3.Distance(pos, s.transform.position) < shortest && !hunted.Contains(s))
+            {
+                shortest = Vector3.Distance(pos, s.transform.position);
+                shep = s;
+            }
+        }
+
+        return shep;
+    }
+
     public void RemoveSheep(GameObject shep)
     {
         sheep.Remove(shep);

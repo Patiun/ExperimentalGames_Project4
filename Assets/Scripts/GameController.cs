@@ -2,12 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
     public static GameController instance;
     public int score;
     public bool debug;
+    private float nextTime;
+
+    public GameObject gameover;
+    public Text scoreTxt;
+
 	// Use this for initialization
 	void Start () {
         instance = this;
@@ -27,11 +33,19 @@ public class GameController : MonoBehaviour {
         {
             debug = !debug;
         }
+        if (Time.time > nextTime)
+        {
+            score += 1;
+            nextTime = Time.time + 1f;
+        }
 	}
 
     public void GameOver()
     {
         Debug.Log("Game Over!");
+        Time.timeScale = 0;
+        scoreTxt.text = "Score: " + score;
+        gameover.SetActive(true);
     }
 
     public void AddScore(int amount)
