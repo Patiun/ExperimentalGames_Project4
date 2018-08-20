@@ -16,6 +16,7 @@ public class WolfAI : MonoBehaviour {
 
     private WolfSpawner spawner;
     private float huntTime;
+    private float buffer = 5f;
 	// Use this for initialization
 	void Start () {
         spawner = WolfSpawner.instance;
@@ -53,10 +54,11 @@ public class WolfAI : MonoBehaviour {
     {
         if (sneaking)
         {
-            Seperate();
+            //Seperate();
             Arrive(huntPosition, 5f);
             AvoidCenter(spawner.radius);
-            if (Vector3.Distance(position,huntPosition) < 1f)
+            Debug.Log(Vector3.Distance(position, huntPosition));
+            if (Vector3.Distance(position,huntPosition) <= 5f)
             {
                 hunting = true;
                 sneaking = false;
@@ -70,6 +72,11 @@ public class WolfAI : MonoBehaviour {
             }
         } else if (hunting)
         {
+            if (target == null)
+            {
+                target = SheepManager.instance.GetNearestSheep(position);
+                if (target == null) { Scare(); }
+            }
             if (Time.time > huntTime)
             {
                 Hunt(target);
@@ -79,7 +86,7 @@ public class WolfAI : MonoBehaviour {
             }
         } else if (fleeing)
         {
-            AvoidCenter(100f);
+            Flee((transform.position - Vector3.zero)*100);
             if (Vector3.Distance(Vector3.zero,position) > 80 )
             {
                 spawner.RemoveWolf(gameObject);
@@ -117,7 +124,8 @@ public class WolfAI : MonoBehaviour {
 
         if (d < radius)
         {
-            float m = Mathf.Abs(sneakSpeed * d / radius);
+            //float m = Mathf.Abs(sneakSpeed * d / radius);
+            float m = Mathf.Lerp(0f, sneakSpeed, Mathf.InverseLerp(0,1,d/radius));
             desired = Vector3.ClampMagnitude(desired, m);
         }
         else
@@ -131,17 +139,38 @@ public class WolfAI : MonoBehaviour {
         ApplyForce(steering);
     }
 
+    public void Flee(Vector3 pos)
+    {
+        Vector3 desired = pos - transform.position;
+        float d = desired.magnitude;
+
+        desired = desired.normalized * sprintSpeed;
+
+        Vector3 steering = desired - velocity;
+        steering = Vector3.ClampMagnitude(steering, maxForce);
+
+        ApplyForce(steering);
+    }
+
     public void AvoidCenter(float radius)
     {
         Vector3 desired = position - Vector3.zero;
-        if (desired.magnitude < radius)
-        {
-            desired = desired.normalized * sprintSpeed;
-            Vector3 steering = desired - velocity;
-            steering = Vector3.ClampMagnitude(steering, maxForce);
 
-            ApplyForce(steering);
-       }
+        float d = desired.magnitude;
+        if (d > radius + buffer)
+        {
+            //float m = Mathf.Abs(sneakSpeed * d / radius);
+            desired = -desired.normalized * sneakSpeed;
+        }
+        else
+        {
+            desired = desired.normalized * sneakSpeed;
+        }
+
+        Vector3 steering = desired - velocity;
+        steering = Vector3.ClampMagnitude(steering, maxForce);
+
+        ApplyForce(steering);
     }
 
     public void Seperate()
@@ -153,8 +182,9 @@ public class WolfAI : MonoBehaviour {
             desired += (position - wolf.transform.position);
         }
         desired = (desired / nearby.Count).normalized * sneakSpeed;
+        Vector3 steering = desired - velocity;
 
-        ApplyForce(desired);
+        ApplyForce(Vector3.ClampMagnitude(steering,maxForce));
     }
 
     public void Scare()

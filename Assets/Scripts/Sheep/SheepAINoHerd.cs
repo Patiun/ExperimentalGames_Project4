@@ -87,7 +87,7 @@ public class SheepAINoHerd : MonoBehaviour {
         else if (state == State.WANDER)
         {
             //Wander
-            internalVelocity = transform.forward * 0.5f * speed;
+            internalVelocity = transform.forward * 0.5f * originalSpeed;
             internalVelocity.y = 0f;
             rb.velocity = internalVelocity;
             if (Time.time > nextWanderTime)
@@ -130,8 +130,14 @@ public class SheepAINoHerd : MonoBehaviour {
 
     public void BarkedAt()
     {
+        state = State.FLEE;
+        internalVelocity = transform.forward * barkBoostStrength * originalSpeed;
         bark = true;
         speed = barkBoostStrength * speed;
+        if (speed > 4f * originalSpeed)
+        {
+            speed = 4f * originalSpeed;
+        }
         barkOff = Time.time + barkBoostDuration;
     }
 
@@ -156,9 +162,13 @@ public class SheepAINoHerd : MonoBehaviour {
             {
                 scared = true;
                 state = State.FLEE;
-                cohesionWeight *= 2f;
-                seperationVariance *= 0.8f;
-                speed *= 2.5f;
+                cohesionWeight = 2f * originalCohesion;
+                seperationVariance = 0.8f * originalSeperation;
+                speed *= 2f;
+                if (speed > 2f * originalSpeed * barkBoostStrength)
+                {
+                    speed = 2f * originalSpeed * barkBoostStrength;
+                }
                 scaryThings.Add(other.gameObject);
             }
         }
@@ -300,7 +310,7 @@ public class SheepAINoHerd : MonoBehaviour {
             {
                 if (CanSee(thing))
                 {
-                    Vector3 dif = thing.GetComponent<Collider>().ClosestPoint(transform.position) - transform.position;
+                    Vector3 dif = thing.GetComponent<Collider>().ClosestPoint(transform.position) - transform.position; //FIX THIS
                     dir += dif;
                 }
             }

@@ -49,8 +49,10 @@ public class WolfSpawner : MonoBehaviour {
 
     public void SpawnWolf()
     {
-        Vector3 startLocation = Quaternion.Euler(0, Random.Range(-360, 360), 0) * transform.forward * radius;
-        Vector3 targetLocation = Quaternion.Euler(0, Random.Range(-360, 360), 0) * transform.forward * radius;
+        float angle = Random.Range(-360, 360);
+        Vector3 startLocation = Quaternion.Euler(0, angle, 0) * transform.forward * radius;
+        startLocation = startLocation + startLocation.normalized * 3f;
+        Vector3 targetLocation = Quaternion.Euler(0, Random.Range(angle-30,angle+30), 0) * transform.forward * radius;
         GameObject wolf = null;
         if (Random.Range(0, 100f) < chanceForSheepsClothing)
         {
@@ -60,6 +62,7 @@ public class WolfSpawner : MonoBehaviour {
         {
             wolf = Instantiate(wolfPrefab, startLocation, Quaternion.identity, transform);
         }
+        targetLocation.y = wolf.transform.position.y;
         wolf.GetComponent<WolfAI>().huntPosition = targetLocation;
         wolves.Add(wolf);
         nextSpawn = Time.time + 1 / spawnRate;
