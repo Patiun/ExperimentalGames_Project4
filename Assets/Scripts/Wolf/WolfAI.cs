@@ -83,6 +83,10 @@ public class WolfAI : MonoBehaviour {
             if (Vector3.Distance(Vector3.zero,position) > 80 )
             {
                 spawner.RemoveWolf(gameObject);
+                if (target != null)
+                {
+                    SheepManager.instance.RemoveHunted(target);
+                }
                 Destroy(gameObject);
             }
         }

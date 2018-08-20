@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour {
 
     public static GameController instance;
+    public int score;
     public bool debug;
 	// Use this for initialization
 	void Start () {
@@ -31,5 +32,10 @@ public class GameController : MonoBehaviour {
     public void GameOver()
     {
         Debug.Log("Game Over!");
+    }
+
+    public void AddScore(int amount)
+    {
+        score += amount;
     }
 }

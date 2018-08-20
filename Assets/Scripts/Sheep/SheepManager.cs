@@ -51,4 +51,24 @@ public class SheepManager : MonoBehaviour {
     {
         hunted.Add(shep);
     }
+
+    public void RemoveHunted(GameObject shep)
+    {
+        hunted.Remove(shep);
+    }
+
+    public List<GameObject> GetNearestSheeps(Vector3 position, float radius)
+    {
+        List<GameObject> sheps = new List<GameObject>();
+
+        foreach(GameObject shep in sheep)
+        {
+            if (Vector3.Distance(position,shep.transform.position) < radius)
+            {
+                sheps.Add(shep);
+            }
+        }
+
+        return sheps;
+    }
 }

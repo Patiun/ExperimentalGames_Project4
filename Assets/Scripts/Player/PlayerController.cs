@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour {
 
     public int controllerNumber;
     public float speed;
+    public bool sprinting;
+    public float sprintSpeed;
 
     private WolfSpawner wolfSpawner;
     private float radius;
@@ -28,6 +30,7 @@ public class PlayerController : MonoBehaviour {
                 Bark();
                 Debug.Log("WOOF!");
             }
+            sprinting = Input.GetKey(KeyCode.LeftShift);
         }
         else
         {
@@ -37,11 +40,19 @@ public class PlayerController : MonoBehaviour {
                 Bark();
                 Debug.Log("WOOF!");
             }
+            sprinting = Input.GetButton("Sprint " + controllerNumber);
         }
-        velocity = velocity.normalized * speed;
+        if (!sprinting)
+        {
+            velocity = velocity.normalized * speed;
+        }else
+        {
+            velocity = velocity.normalized * sprintSpeed;
+        }
         transform.LookAt(velocity + transform.position);
         rb.velocity = velocity;
 	}
+
 
     public void Bark()
     {
@@ -53,6 +64,12 @@ public class PlayerController : MonoBehaviour {
         foreach(GameObject wolf in wolves)
         {
             wolf.GetComponent<WolfAI>().Scare();
+        }
+
+        List<GameObject> sheps = SheepManager.instance.GetNearestSheeps(transform.position, radius);
+        foreach(GameObject shep in sheps)
+        {
+            shep.GetComponent<SheepAINoHerd>().BarkedAt();
         }
     }
 }

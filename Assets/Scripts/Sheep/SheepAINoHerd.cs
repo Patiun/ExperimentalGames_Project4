@@ -22,6 +22,8 @@ public class SheepAINoHerd : MonoBehaviour {
     public float wanderStrength;
     public float grazeBase, grazeVariance;
     public float fleeBase, fleeVariance;
+    public float barkBoostDuration;
+    public float barkBoostStrength;
 
     private Rigidbody rb;
     private float originalCohesion, originalSeperation, originalSpeed;
@@ -29,6 +31,8 @@ public class SheepAINoHerd : MonoBehaviour {
     private Vector3 internalVelocity;
     private float nextGrazeTime;
     private float fleeEndTime;
+    private float barkOff;
+    private bool bark;
 
 	// Use this for initialization
 	void Start () {
@@ -110,9 +114,26 @@ public class SheepAINoHerd : MonoBehaviour {
                 nextGrazeTime = Time.time + grazeBase + Random.Range(-grazeVariance, grazeVariance);
             }
         }
+
+        if (bark)
+        {
+            if (Time.time > barkOff)
+            {
+                bark = false;
+                speed = originalSpeed;
+            }
+        }
+
         //Represent Motion and Turn
         Debug.DrawLine(transform.position, internalVelocity+transform.position, Color.yellow, 0.2f, true);
 	}
+
+    public void BarkedAt()
+    {
+        bark = true;
+        speed = barkBoostStrength * speed;
+        barkOff = Time.time + barkBoostDuration;
+    }
 
     public void OnTriggerEnter(Collider other)
     {

@@ -221,6 +221,8 @@ MonoBehaviour:
   grazeVariance: 2
   fleeBase: 0
   fleeVariance: 0
+  barkBoostDuration: 1.25
+  barkBoostStrength: 2
 --- !u!135 &135557409094895360
 SphereCollider:
   m_ObjectHideFlags: 1
