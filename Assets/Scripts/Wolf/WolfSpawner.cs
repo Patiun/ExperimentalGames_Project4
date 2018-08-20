@@ -13,8 +13,10 @@ public class WolfSpawner : MonoBehaviour {
     public GameObject wolfPrefab;
     public GameObject wolfInSheepsClothingPrefab;
     public float chanceForSheepsClothing;
+    public float increaseTime = 120f;
 
     private float nextSpawn;
+    private float nextIncrease;
     private int spawnAmount = 1;
 
 	// Use this for initialization
@@ -22,6 +24,7 @@ public class WolfSpawner : MonoBehaviour {
         instance = this;
         radius = GetComponent<SphereCollider>().radius + 5f;
         wolves = new List<GameObject>();
+        nextIncrease = Time.time + increaseTime;
 	}
 
     // Update is called once per frame
@@ -42,7 +45,16 @@ public class WolfSpawner : MonoBehaviour {
         {
             if(Time.time > nextSpawn)
             {
-                SpawnWolf();
+                for (int i = 0; i < spawnAmount; i++)
+                {
+
+                    SpawnWolf();
+                }
+            }
+            if(Time.time > nextIncrease)
+            {
+                spawnAmount++;
+                nextIncrease = Time.time + increaseTime;
             }
         }
 	}
@@ -52,7 +64,7 @@ public class WolfSpawner : MonoBehaviour {
         float angle = Random.Range(-360, 360);
         Vector3 startLocation = Quaternion.Euler(0, angle, 0) * transform.forward * radius;
         startLocation = startLocation + startLocation.normalized * 3f;
-        Vector3 targetLocation = Quaternion.Euler(0, Random.Range(angle-30,angle+30), 0) * transform.forward * radius;
+        Vector3 targetLocation = Quaternion.Euler(0, Random.Range(angle-40,angle+40), 0) * transform.forward * radius;
         GameObject wolf = null;
         if (Random.Range(0, 100f) < chanceForSheepsClothing)
         {

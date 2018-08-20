@@ -49,11 +49,6 @@ public class WolfISAI : MonoBehaviour {
 
     public void ApplyBehavior()
     {
-        if (target == null)
-        {
-            Scare();
-            return;
-        }
         if (sneaking)
         {
 
